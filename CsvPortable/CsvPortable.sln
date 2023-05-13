@@ -1,0 +1,24 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CsvPortable", "CsvPortable\CsvPortable.csproj", "{9CFB5129-67CD-4F88-A91A-9D008949E92C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CsvPortable.Tests", "CsvPortable.Tests\CsvPortable.Tests.csproj", "{391EE96B-1C1C-4F9B-A2FA-5D4C1716E539}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Roadmap", "Roadmap", "{018C4971-FF9D-45CF-8865-5FB8AC9FCBF3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9CFB5129-67CD-4F88-A91A-9D008949E92C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9CFB5129-67CD-4F88-A91A-9D008949E92C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9CFB5129-67CD-4F88-A91A-9D008949E92C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9CFB5129-67CD-4F88-A91A-9D008949E92C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{391EE96B-1C1C-4F9B-A2FA-5D4C1716E539}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{391EE96B-1C1C-4F9B-A2FA-5D4C1716E539}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{391EE96B-1C1C-4F9B-A2FA-5D4C1716E539}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{391EE96B-1C1C-4F9B-A2FA-5D4C1716E539}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
