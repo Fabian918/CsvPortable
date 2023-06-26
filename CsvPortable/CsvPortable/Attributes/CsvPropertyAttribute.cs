@@ -8,21 +8,18 @@ namespace CsvPortable.Attributes
     {
         public int Index { get; set; }
         public string? Name { get; set; }
-        public string Enclosure { get; set; }
         static int IndexDefaultValue () => Int32.MaxValue - 1000;
 
-        public CsvPropertyAttribute(int index, string? name = null, string enclosure = "")
+        public CsvPropertyAttribute(int index, string? name = null)
         {
             Index = index;
             Name = name;
-            Enclosure = enclosure;
         }
         
-        public CsvPropertyAttribute(string? name = null, string enclosure = "")
+        public CsvPropertyAttribute(string? name = null)
         {
             Index = IndexDefaultValue();
             Name = name;
-            Enclosure = enclosure;
         }
     }
 }

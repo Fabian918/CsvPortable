@@ -1,4 +1,7 @@
-namespace CsvPortable.Dtos
+
+using CsvPortable.Interfaces;
+
+namespace CsvPortable.Configuration
 {
     public class CsvParameter
     {
@@ -8,22 +11,22 @@ namespace CsvPortable.Dtos
             Configuration = configuration;
         }
 
-        public CsvParameter(CsvConfiguration? configuration, string delimiter) : this(configuration)
+        public CsvParameter(CsvConfiguration? configuration, CsvDelimiter delimiter) : this(configuration)
         {
             Delimiter = delimiter ?? throw new ArgumentNullException(nameof(delimiter));
         }
 
-        public CsvParameter(CsvConfiguration? configuration, string delimiter, bool closeEnd) : this(configuration, delimiter)
+        public CsvParameter(CsvConfiguration? configuration, CsvDelimiter delimiter, bool closeEnd) : this(configuration, delimiter)
         {
             CloseEnd = closeEnd;
         }
 
-        public CsvParameter(CsvConfiguration? configuration, string delimiter, bool closeEnd, List<(Type, CsvConfiguration)> specifiedConfigurations) : this(configuration, delimiter, closeEnd)
+        public CsvParameter(CsvConfiguration? configuration, CsvDelimiter delimiter, bool closeEnd, List<(Type, CsvConfiguration)> specifiedConfigurations) : this(configuration, delimiter, closeEnd)
         {
             SpecifiedConfigurations = specifiedConfigurations ?? throw new ArgumentNullException(nameof(specifiedConfigurations));
         }
         
-        public CsvParameter(CsvConfiguration? configuration, string delimiter, bool closeEnd, params (Type, CsvConfiguration)[] specifiedConfigurations) : this(configuration, delimiter, closeEnd)
+        public CsvParameter(CsvConfiguration? configuration, CsvDelimiter delimiter, bool closeEnd, params (Type, CsvConfiguration)[] specifiedConfigurations) : this(configuration, delimiter, closeEnd)
         {
             SpecifiedConfigurations = specifiedConfigurations.ToList();
         }
@@ -38,7 +41,7 @@ namespace CsvPortable.Dtos
         /// <summary>
         /// Gets or Sets Delimiter --> default ";"
         /// </summary>
-        public string Delimiter { get; set; } = ";";
+        public CsvDelimiter Delimiter { get; set; } = ";";
 
         /// <summary>
         /// Gets or Sets CloseEnd (The CSVLine gets closed(\r\n)) --> default "true"
@@ -65,17 +68,17 @@ namespace CsvPortable.Dtos
         /// </summary>
         public List<(Type Type, CsvConfiguration Configuration)> SpecifiedConfigurations { get; set; } = new List<(Type Type, CsvConfiguration Configuration)>();
 
-        public static implicit operator CsvParameter((CsvConfiguration? Configuration, string Delimiter) tupel)
+        public static implicit operator CsvParameter((CsvConfiguration? Configuration, CsvDelimiter Delimiter) tupel)
         {
             return new CsvParameter(tupel.Configuration, tupel.Delimiter);
         }
 
-        public static implicit operator CsvParameter((CsvConfiguration? Configuration, string Delimiter, bool CloseEnd) tupel)
+        public static implicit operator CsvParameter((CsvConfiguration? Configuration, CsvDelimiter Delimiter, bool CloseEnd) tupel)
         {
             return new CsvParameter(tupel.Configuration, tupel.Delimiter, tupel.CloseEnd);
         }
 
-        public static implicit operator CsvParameter((CsvConfiguration Configuration, string Delimiter, bool CloseEnd, List<(Type, CsvConfiguration)> SpecifiedConfigurations) tupel)
+        public static implicit operator CsvParameter((CsvConfiguration Configuration, CsvDelimiter Delimiter, bool CloseEnd, List<(Type, CsvConfiguration)> SpecifiedConfigurations) tupel)
         {
             return new CsvParameter(tupel.Configuration, tupel.Delimiter, tupel.CloseEnd, tupel.SpecifiedConfigurations);
         }

@@ -1,0 +1,69 @@
+[
+  {
+    "Row": "\"\"",
+    "Delimiter": ";",
+    "ExpectedItems": [
+      ""
+    ]
+  },
+  {
+    "Row": "\"\"\"",
+    "Delimiter": ";",
+    "ExpectedItems": [
+      ""
+    ]
+  },
+  {
+    "Row": "\"\"\"\"",
+    "Delimiter": ";",
+    "ExpectedItems": [
+      "\""
+    ]
+  },
+  {
+    "Row": "\"\"\"\"\"\"",
+    "Delimiter": ";",
+    "ExpectedItems": [
+      "\"\""
+    ]
+  },
+  {
+    "Row": "\"HalloWelt\"",
+    "Delimiter": ";",
+    "ExpectedItems": [
+      "HalloWelt"
+    ]
+  },
+  {
+    "Row": "\"Hallo;Welt\"",
+    "Delimiter": ";",
+    "ExpectedItems": [
+      "Hallo;Welt"
+    ]
+  },
+  {
+    "Row": "\"One \"Encapsulated\" string\"",
+    "Delimiter": ";",
+    "ExpectedItems": [
+      "One \"Encapsulated\" string"
+    ]
+  },
+  {
+    "Row": "\"\"\";;\"\"\"",
+    "Delimiter": ";",
+    "ExpectedItems": [
+      "\";;\""
+
+    ]
+  },
+  {
+    "Row": "\"\"\";;\"\"\";\"t\"\"hallo;\"\"\";\"--\";\";hallo;\"",
+    "Delimiter": ";",
+    "ExpectedItems": [
+      "\";;\"",
+      "t\"hallo;\"",
+      "--",
+      ";hallo;"
+    ]
+  }
+]

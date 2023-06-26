@@ -4,10 +4,19 @@
         <TargetFramework>net6.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <Authors>Fabian Hering</Authors>
+        <Version>0.1.1</Version>
+        <Description>Simple csv mapper.</Description>
+        <Package>README.md</Package>
+        <PackageProjectUrl>https://github.com/Fabian918/CsvPortable</PackageProjectUrl>
     </PropertyGroup>
 
     <ItemGroup>
       <PackageReference Include="JetBrains.Annotations" Version="2022.3.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Dtos\" />
     </ItemGroup>
 
 </Project>

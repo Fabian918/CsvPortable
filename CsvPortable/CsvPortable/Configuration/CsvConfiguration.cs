@@ -1,12 +1,12 @@
 
-namespace CsvPortable.Dtos
+namespace CsvPortable.Configuration
 {
     public class CsvConfiguration
     {
         public int Type { get; }
 
         public DateTime Date { get; }
-        
+
         public static List<CsvConfiguration> Configurations { get; set; }
 
         public CsvConfiguration(int type, string date)

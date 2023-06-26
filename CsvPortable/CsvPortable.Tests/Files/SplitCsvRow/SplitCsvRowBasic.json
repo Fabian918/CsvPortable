@@ -1,0 +1,138 @@
+[
+  {
+    "Row": "",
+    "Delimiter": ",",
+    "ExpectedItems": [
+      ""
+    ]
+  },
+  {
+    "Row": "\r\n",
+    "Delimiter": ",",
+    "ExpectedItems": [
+      ""
+    ]
+  },
+  {
+    "Row": ",,",
+    "Delimiter": ",",
+    "ExpectedItems": [
+      "",
+      "",
+      ""
+    ]
+  },
+  {
+    "Row": ";;;;",
+    "Delimiter": ";",
+    "ExpectedItems": [
+      "",
+      "",
+      "",
+      "",
+      ""
+    ]
+  },
+  {
+    "Row": ";,;,",
+    "Delimiter": ";",
+    "ExpectedItems": [
+      "",
+      ",",
+      ","
+    ]
+  },
+  {
+    "Row": ";;,;;,;;",
+    "Delimiter": ";",
+    "ExpectedItems": [
+      "",
+      "",
+      ",",
+      "",
+      ",",
+      "",
+      ""
+    ]
+  },
+  {
+    "Row": ";;;,,,,",
+    "Delimiter": "&",
+    "ExpectedItems": [
+      ";;;,,,,"
+    ]
+  },
+  {
+    "Row": "Hi;How;Are;You",
+    "Delimiter": ";",
+    "ExpectedItems": [
+      "Hi",
+      "How",
+      "Are",
+      "You"
+    ]
+  },
+  {
+    "Row": "1;12;98;-12\r\n",
+    "Delimiter": ";",
+    "ExpectedItems": [
+      "1",
+      "12",
+      "98",
+      "-12"
+    ]
+  },
+  {
+    "Row": "12.9818.1231,12331;828182183;textext",
+    "Delimiter": ";",
+    "ExpectedItems": [
+      "12.9818.1231,12331",
+      "828182183",
+      "textext"
+    ]
+  },
+  {
+    "Row": "1;12;98;-12;",
+    "Delimiter": "/",
+    "ExpectedItems": [
+      "1;12;98;-12;"
+    ]
+  },
+  {
+    "Row": "1;12;98;-12;",
+    "Delimiter": ";;",
+    "ExpectedItems": [
+      "1;12;98;-12;"
+    ]
+  },
+  {
+    "Row": "1;;12;;98;;-12;;",
+    "Delimiter": ";;",
+    "ExpectedItems": [
+      "1",
+      "12",
+      "98",
+      "-12",
+      ""
+    ]
+  },
+  {
+    "Row": "1;;12;98;;-12;",
+    "Delimiter": ";;",
+    "ExpectedItems": [
+      "1",
+      "12;98",
+      "-12;"
+    ]
+  },
+  {
+    "Row": "/182/998/6126\r",
+    "Delimiter": "/",
+    "ExpectedItems": [
+      "",
+      "182",
+      "998",
+      "6126"
+    ]
+  }
+]

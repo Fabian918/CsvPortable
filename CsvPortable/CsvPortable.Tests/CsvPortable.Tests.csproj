@@ -25,4 +25,13 @@
       <ProjectReference Include="..\CsvPortable\CsvPortable.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Update="Files\SplitCsvRow\SplitCsvRowBasic.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="Files\SplitCsvRow\SplitCsvRowEncapsulation.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
 </Project>

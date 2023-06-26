@@ -7,11 +7,8 @@ namespace CsvPortable.Extensions
             get =>
                 new List<(string ValueToReplace, string Replacement)>()
                 {
-                    ("\\", ""),
-                    ("\"", "'"),
-                    ("\r", ""),
-                    ("\n", "<br>"),
-                    ("|", "-")
+                    // Replacing " with 2 " for csv conformity
+                    ("\"", "\"\""),
                 };
         }
 
@@ -23,15 +20,5 @@ namespace CsvPortable.Extensions
             }
             return val;
         }
-
-        public static string FromCsvConform(this string val)
-        {
-            val = val.Replace("\\", "");
-            return val;
-        }
-
-     
-      
-
     }
 }

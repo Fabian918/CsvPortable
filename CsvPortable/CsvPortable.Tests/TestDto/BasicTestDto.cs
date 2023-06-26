@@ -1,13 +1,12 @@
 using CsvPortable.Attributes;
-using CsvPortable.Dtos;
 using CsvPortable.Interfaces;
 
 namespace CsvPortable.Tests.TestDto;
 
 public class BasicTestDto
 {
-    [CsvProperty(enclosure: "\"")] public string? String { get; set; }
-    [CsvProperty(enclosure: "\"")] public char? Char { get; set; }
+    [CsvProperty()] public string? String { get; set; }
+    [CsvProperty()] public char? Char { get; set; }
 
     [CsvProperty()] public bool? Bool { get; set; }
 

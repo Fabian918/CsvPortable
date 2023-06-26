@@ -1,4 +1,4 @@
-using CsvPortable.Dtos;
+using CsvPortable.Configuration;
 using CsvPortable.Interfaces;
 using CsvPortable.Tests.TestDto;
 
@@ -8,6 +8,7 @@ public class BasicDeSerializationTests
 {
     [Theory]
     [InlineData(null, null, null, null, null, null)]
+    [InlineData("\"\"\"\"\"\"", null, null, null, null, null)]
     [InlineData("testString", null, null, null, null, null)]
     [InlineData("testString123", 's', null, null, null, null)]
     [InlineData("77812", '7', true, null, null, null)]
@@ -30,9 +31,9 @@ public class BasicDeSerializationTests
             Double = doubleS
         };
 
+        var csvRow = ICsvPortable.ExportToCsvLine(basicTestDto, CsvParameter.Default)!;
         var testUserAfterCsv =
-            ICsvPortable.FromCsvRow<BasicTestDto>(ICsvPortable.ExportToCsvLine(basicTestDto, Dtos.CsvParameter.Default),
-                CsvParameter.Default)!;
+            ICsvPortable.FromCsvRow<BasicTestDto>(csvRow , CsvParameter.Default)!;
 
      
         // We cant differ here, if the string was null or empty, because the csv will be empty in both cases.
