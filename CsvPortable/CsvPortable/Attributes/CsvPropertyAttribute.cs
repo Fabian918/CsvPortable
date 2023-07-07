@@ -8,7 +8,7 @@ namespace CsvPortable.Attributes
     {
         public int Index { get; set; }
         public string? Name { get; set; }
-        static int IndexDefaultValue () => Int32.MaxValue - 1000;
+        public static int IndexDefaultValue () => Int32.MaxValue - 1000;
 
         public CsvPropertyAttribute(int index, string? name = null)
         {

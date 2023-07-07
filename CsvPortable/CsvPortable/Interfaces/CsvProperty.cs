@@ -14,15 +14,15 @@ public class CsvProperty
     {
         PropertyInfo = propertyInfo ?? throw new ArgumentNullException(nameof(propertyInfo));
 
-        var csvAttribute =
-            (PropertyInfo.GetCustomAttributes(false).First(k => k.GetType() == typeof(CsvPropertyAttribute)) as
-                CsvPropertyAttribute) ?? throw new ArgumentNullException($"Property '{propertyInfo.Name}' has no CsvPropertyAttribute.");
+        CsvPropertyAttribute? csvAttribute =
+            (PropertyInfo.GetCustomAttributes(false).FirstOrDefault(k => k.GetType() == typeof(CsvPropertyAttribute)) as
+                CsvPropertyAttribute);
             
             
         Manipulations = (PropertyInfo.GetCustomAttributes(false).OfType<CsvManipulateAttribute>()).ToList();
 
-        Index = csvAttribute!.Index;
-        Name = csvAttribute.Name!;
+        Index = csvAttribute?.Index ?? CsvPropertyAttribute.IndexDefaultValue();
+        Name = csvAttribute?.Name ?? PropertyInfo.Name;
     }
 
     public PropertyInfo PropertyInfo { get; init; }

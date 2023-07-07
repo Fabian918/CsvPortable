@@ -154,7 +154,7 @@ namespace CsvPortable.Interfaces
             .GetProperties()
             .ToList()
             .Where(k =>
-               k.GetCustomAttributes(false).FirstOrDefault(k => k.GetType() == typeof(CsvPropertyAttribute)) != null)
+               !k.GetCustomAttributes(false).Any(k => k.GetType() == typeof(CsvIgnoreAttribute)))
             .Select(k => new CsvProperty(k)).ToList();
 
          var t = T.GetProperties();
