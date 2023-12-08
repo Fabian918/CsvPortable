@@ -4,9 +4,6 @@ Simple, open &amp; free  Csv mapper libary for C# .NET Core
 ## Getting Started 
 
 ```csharp
-await using var serviceProvider = serviceCollection.BuildServiceProvider();
-var logger = serviceProvider.GetRequiredService<ILogger<Program>>();
-
 // ----- Read csv File
 
 // Open File Stream 
@@ -53,5 +50,8 @@ List<Address> newAddresses = new List<Address>()
       Created = new DateTime(2012, 12, 31)
    }
 };
+
+// Write items as IEnumerable<T>
+await ICsvPortable.ToStream(newAddresses, writeStream);
 
 ```
