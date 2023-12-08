@@ -16,10 +16,8 @@ public class StreamTest
 
    private const int Count = 20;
 
-   [Theory]
-   [InlineData(true)]
-   [InlineData(false)]
-   public async Task DeserializeSerializeStream(bool loggerNull)
+   [Fact]
+   public async Task DeserializeSerializeStream()
    {
       var stream = File.OpenRead("Files/Person/Person1.csv");
       var entries = ICsvPortable.FromStream<Person>(stream: stream).ToList();
