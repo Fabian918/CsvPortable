@@ -1,0 +1,10 @@
+name: PR Validation 
+on: 
+ push:
+    branches: [ main ]
+ pull_request:
+    branches: [ main ]
+
+jobs:
+  Test:
+    uses: Fabian918/CsvPortable/.github/workflows/test.yml@main
