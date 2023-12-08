@@ -1,5 +1,4 @@
 using CsvPortable.Attributes;
-using CsvPortable.Interfaces;
 
 namespace CsvPortable.Tests.TestDto;
 

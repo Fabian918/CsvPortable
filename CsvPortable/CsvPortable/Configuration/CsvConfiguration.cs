@@ -7,7 +7,8 @@ namespace CsvPortable.Configuration
 
         public DateTime Date { get; }
 
-        public static List<CsvConfiguration> Configurations { get; set; }
+        // ReSharper disable once CollectionNeverUpdated.Global
+        public static List<CsvConfiguration> Configurations { get; set; } = new List<CsvConfiguration>();
 
         public CsvConfiguration(int type, string date)
         {
@@ -37,7 +38,7 @@ namespace CsvPortable.Configuration
 
         public static implicit operator CsvConfiguration (int configurationType)
         {
-            return Configurations.First( k => k.Type == configurationType);  
+            return  Configurations.First( k => k.Type == configurationType);  
         }
         
         public override bool Equals(object? obj)

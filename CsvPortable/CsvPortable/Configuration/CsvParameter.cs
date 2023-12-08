@@ -49,7 +49,7 @@ namespace CsvPortable.Configuration
         public bool CloseEnd { get; set; } = true;
 
 
-        public CsvParameter? ParameterToUse(Type type, bool closeEnd)
+        public CsvParameter ParameterToUse(Type type, bool closeEnd)
         {
             bool MatchType((Type Type, CsvConfiguration Configuration) t)
             {

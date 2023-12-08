@@ -45,18 +45,18 @@ public class IgnoreAttributeTest
    
    private class BaseClass
    {
-      public virtual string String { get; set; }
+      public virtual string String { get; set; } = String.Empty;
       public virtual int Int { get; set; }
    }
 
    private class IgnoreClass1 : BaseClass
    {
-      [CsvIgnore] public override string String { get; set; }
+      [CsvIgnore] public override string String { get; set; } = String.Empty;
    }
 
    private class IgnoreClass2 : BaseClass
    {
-      public override string String { get; set; }
+      public override string String { get; set; } = string.Empty;
 
       [CsvIgnore] public override int Int { get; set; }
    }

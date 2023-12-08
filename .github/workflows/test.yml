@@ -21,4 +21,4 @@ jobs:
       - name: Build
         run: dotnet build .  --warnaserror
       - name: Test
-        run: dotnet test .  --configuration --no-build
+        run: dotnet test .  --no-build
