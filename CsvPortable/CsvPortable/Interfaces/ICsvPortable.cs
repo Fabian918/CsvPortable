@@ -1,38 +1,45 @@
 using System.ComponentModel;
 using CsvPortable.Attributes;
 using CsvPortable.Configuration;
+using CsvPortable.Exceptions;
 using CsvPortable.Extensions;
+using Microsoft.Extensions.Logging;
 
 namespace CsvPortable.Interfaces
 {
    public interface ICsvPortable
    {
-      public const char StringEnclosure = '"';
+      public const char ValueEnclosure = '"';
+      public const string CsvRowDelimiter = "\r\n";
 
-      private static readonly Type[] TypesForEnclosure = new[] { typeof(string), typeof(char) };
+      public static string ExportDefinition<T>(CsvParameter? parameter = null)
+      {
+         return ExportDefinition(typeof(T), parameter);
+      }
 
-      public static string ExportDefinition<T>(T value, CsvParameter? parameter = null)
+      public static string ExportDefinition(Type t, CsvParameter? parameter = null)
       {
          parameter ??= CsvParameter.Default;
          string export = "";
-         foreach (var pro in GetPropertiesToMap(typeof(T), parameter.Configuration))
+         foreach (var prop in GetPropertiesToMap(t, parameter.Configuration))
          {
-            var propValue = pro.PropertyInfo.GetValue(value);
-            if (propValue is ICsvPortable exportable)
+            TypeConverter converter = TypeDescriptor.GetConverter(prop.PropertyInfo.PropertyType);
+
+            //ComplexObjects need to be instanced
+            if (!converter.CanConvertFrom(typeof(string)))
             {
-               export += ICsvPortable.ExportDefinition(exportable,
-                  parameter.ParameterToUse(exportable.GetType(), false));
+               export += ICsvPortable.ExportDefinition(prop.PropertyInfo.PropertyType, parameter.ParameterToUse(prop.PropertyInfo.PropertyType, false));
             }
             else
             {
-               export += $"{pro.Name}{parameter.Delimiter}";
+               export += $"{prop.Name}{parameter.Delimiter.Value}";
             }
          }
 
          if (parameter.CloseEnd)
          {
             // remove delimiter and add newline
-            return export.Substring(0, export.Length - 1) + "\r\n";
+            return export.Substring(0, export.Length - 1) + CsvRowDelimiter;
          }
          else
          {
@@ -45,22 +52,21 @@ namespace CsvPortable.Interfaces
          string export = "";
          parameter ??= CsvParameter.Default;
 
-         foreach (var prop in GetPropertiesToMap(typeof(T), parameter.Configuration))
+         foreach (var prop in GetPropertiesToMap(valObject!.GetType(), parameter.Configuration))
          {
             var propValue = prop.PropertyInfo.GetValue(valObject);
-            if (propValue is ICsvPortable exportable)
+            TypeConverter converter = TypeDescriptor.GetConverter(prop.PropertyInfo.PropertyType);
+
+            //ComplexObjects need to be instanced
+            if (!converter.CanConvertFrom(typeof(string)))
             {
-               export += ICsvPortable.ExportToCsvLine(exportable,
-                  parameter.ParameterToUse(exportable.GetType(), false));
+               export += ICsvPortable.ExportToCsvLine(propValue,
+                  parameter.ParameterToUse(prop.PropertyInfo.PropertyType, false));
             }
             else
             {
-               string enclosure = TypesForEnclosure.Contains( 
-                 Nullable.GetUnderlyingType(prop.PropertyInfo.PropertyType) ?? prop.PropertyInfo.PropertyType)
-                  ? StringEnclosure.ToString()
-                  : string.Empty;
-               export +=
-                  $"{enclosure}{prop.PerformManipulations(propValue?.ToString().ToCsvConform())}{enclosure}";
+               // Right now everything is enclosed.
+               export += $"{ValueEnclosure}{prop.PerformManipulations(propValue?.ToString()?.ToCsvConform() ?? string.Empty)}{ValueEnclosure}";
                export += parameter.Delimiter;
             }
          }
@@ -68,7 +74,7 @@ namespace CsvPortable.Interfaces
          if (parameter.CloseEnd)
          {
             // remove delimiter and add newline
-            return export.Substring(0, export.Length - 1) + "\r\n";
+            return export.Substring(0, export.Length - 1) + CsvRowDelimiter;
          }
          else
          {
@@ -76,35 +82,67 @@ namespace CsvPortable.Interfaces
          }
       }
 
+      public static T? TryFromCsvRow<T>(string row) where T : class, new()
+      {
+         return TryFromCsvRow<T>(row: row, parameter: CsvParameter.Default);
+      }
 
-      public static T? FromCsvRow<T>(string row, CsvParameter parameter) where T : class, new()
+      public static T FromCsvRow<T>(string row) where T : class, new()
+      {
+         return FromCsvRow<T>(row: row, parameter: CsvParameter.Default);
+      }
+
+
+      public static T? TryFromCsvRow<T>(string row, CsvParameter parameter) where T : class, new()
+      {
+         try
+         {
+            return FromCsvRow<T>(row, parameter);
+         }
+         catch
+         {
+            return null;
+         }
+      }
+
+      public static T FromCsvRow<T>(string row, CsvParameter parameter) where T : class, new()
       {
          if (string.IsNullOrWhiteSpace(row))
          {
-            return null;
+            throw DeserializationException(typeof(T), "Row is empty");
          }
 
          row = row[^(parameter.Delimiter.Value.Length)..] == parameter.Delimiter
             ? row[..^parameter.Delimiter.Value.Length]
             : row;
          var items = SplitCsv(row, parameter.Delimiter);
-         return FromCsvRow(typeof(T), items, parameter) as T;
+         try
+         {
+            return (T)FromCsvRow(typeof(T), items, parameter);
+         }
+         catch (CsvDeserializationException e)
+         {
+            e.CsvLine = row;
+            throw;
+         }
       }
 
-
-      private static object? FromCsvRow(Type type, List<string> items, CsvParameter parameter)
+      private static object FromCsvRow(Type type, List<string> items, CsvParameter parameter)
       {
          var itemsSave = items.GetRange(0, items.Count);
          var item = Activator.CreateInstance(type);
 
          foreach (var prop in GetPropertiesToMap(type, parameter.Configuration))
          {
+            // TODO:  Enable caching here
+            TypeConverter converter = TypeDescriptor.GetConverter(prop.PropertyInfo.PropertyType);
+
             //ComplexObjects need to be instanced
-            if (prop.PropertyInfo.GetValue(item) is ICsvPortable)
+            if (!converter.CanConvertFrom(typeof(string)))
             {
                prop.PropertyInfo.SetValue(item,
                   FromCsvRow(prop.PropertyInfo.PropertyType, items,
-                     parameter.ParameterToUse(prop.PropertyInfo.GetValue(item).GetType(), false)));
+                     parameter.ParameterToUse(prop.PropertyInfo.PropertyType, false)));
             }
             else
             {
@@ -116,11 +154,12 @@ namespace CsvPortable.Interfaces
 
                   if (prop.PropertyInfo.GetValue(item) is string)
                   {
-                     itemForSet = itemForSet.Trim(StringEnclosure);
+                     itemForSet = itemForSet.Trim(ValueEnclosure);
                   }
 
                   if (prop.PropertyInfo.CanWrite)
                   {
+                     // TODO: Enable caching here
                      prop.PropertyInfo.SetValue(item,
                         TypeDescriptor.GetConverter(prop.PropertyInfo.PropertyType)
                            .ConvertFromString(itemForSet));
@@ -128,13 +167,18 @@ namespace CsvPortable.Interfaces
                }
                catch (Exception ex)
                {
-                  var exp = new Exception(ex.Message);
-                  throw exp;
+                  throw DeserializationException(type, $"Error while parsing '{prop.Name}' - '{ex.Message}'");
                }
             }
          }
 
-         return item;
+         return item ?? DeserializationException(type, "Could not create instance of type");
+      }
+
+
+      private static CsvDeserializationException DeserializationException(Type type, string message, string? csvRow = null)
+      {
+         return new CsvDeserializationException($"Error while creating '{type.Name}' - '{message}'", csvRow);
       }
 
 
@@ -168,11 +212,11 @@ namespace CsvPortable.Interfaces
       public static List<string> SplitCsv(string csvRow, string delimiter)
       {
          List<string> entries = new List<string>();
-        
+
          var cur = "";
          bool lastQuoteWasHandled = false;
 
-      
+
          void AddEntry(string entry)
          {
             if (entry.Length >= delimiter.Length && entry[^delimiter.Length..] == delimiter)
@@ -194,14 +238,14 @@ namespace CsvPortable.Interfaces
             lastQuoteWasHandled = false;
             entries.Add(entry);
          }
-         
+
          foreach (var t in csvRow)
          {
             string compareDelimiter = cur.Length >= delimiter.Length
                ? cur.Substring(cur.Length - delimiter.Length, delimiter.Length)
                : "";
 
-            if (cur.Length >= delimiter.Length && compareDelimiter == delimiter )
+            if (cur.Length >= delimiter.Length && compareDelimiter == delimiter)
             {
                if (cur[0] == 0x22)
                {
@@ -215,18 +259,17 @@ namespace CsvPortable.Interfaces
                {
                   AddEntry(cur);
                }
-              
             }
 
             cur += t;
 
             /*
-             * Quoting Logic: 
-             * single " (0x22) is the quote character 
+             * Quoting Logic:
+             * single " (0x22) is the quote character
              * double "" (0x22 0x22) is the escape character
              */
 
-            
+
             if (cur[^1] == 0x22)
             {
                // Current Char is Quote 
@@ -253,7 +296,7 @@ namespace CsvPortable.Interfaces
          }
 
          // Trim CR CN of the last row 
-         cur = cur.TrimEnd('\n', '\r');
+         cur = cur.TrimEnd(CsvRowDelimiter.ToCharArray());
          AddEntry(cur);
 
          if (csvRow.Length >= delimiter.Length && csvRow[^delimiter.Length..] == delimiter)
@@ -262,6 +305,11 @@ namespace CsvPortable.Interfaces
          }
 
          return entries;
+      }
+
+      public static ICsvStreamer CreateStreamer(ILogger? logger)
+      {
+         return new CsvStreamer(logger);
       }
    }
 }
