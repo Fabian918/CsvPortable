@@ -3,10 +3,11 @@ using CsvPortable.Attributes;
 using CsvPortable.Configuration;
 using CsvPortable.Exceptions;
 using CsvPortable.Extensions;
-using Microsoft.Extensions.Logging;
 
 namespace CsvPortable.Interfaces
 {
+   using System.Text;
+
    public interface ICsvPortable
    {
       public const char ValueEnclosure = '"';
@@ -174,8 +175,7 @@ namespace CsvPortable.Interfaces
 
          return item ?? DeserializationException(type, "Could not create instance of type");
       }
-
-
+      
       private static CsvDeserializationException DeserializationException(Type type, string message, string? csvRow = null)
       {
          return new CsvDeserializationException($"Error while creating '{type.Name}' - '{message}'", csvRow);
@@ -307,9 +307,77 @@ namespace CsvPortable.Interfaces
          return entries;
       }
 
-      public static ICsvStreamer CreateStreamer(ILogger? logger)
+      public static IEnumerable<T> FromStream<T>(Stream stream, Action<CsvDeserializationException>? onErrorRow = null) where T : class, new()
       {
-         return new CsvStreamer(logger);
+         string currentRow = string.Empty;
+         bool isInQuotes = false;
+
+         bool IsStreamEnd() => stream.Position >= stream.Length;
+         bool IsRowComplete() => (currentRow.EndsWith(ICsvPortable.CsvRowDelimiter[^1]) && !isInQuotes) || IsStreamEnd();
+
+         bool firstRow = true;
+
+         while (stream.Position <= stream.Length)
+         {
+            if (IsRowComplete())
+            {
+               if (firstRow)
+               {
+                  firstRow = false;
+                  currentRow = string.Empty;
+                  continue;
+               }
+
+               T? item = null;
+               try
+               {
+                  item = ICsvPortable.FromCsvRow<T>(currentRow);
+               }
+               catch (CsvDeserializationException e)
+               {
+                  e.CsvLine = currentRow;
+                  if (onErrorRow is not null)
+                  {
+                     onErrorRow(e);
+                  }
+                  else
+                  {
+                     throw;
+                  }
+               }
+
+               if (item is not null)
+               {
+                  yield return item;
+               }
+
+               currentRow = string.Empty;
+               if (IsStreamEnd())
+               {
+                  break;
+               }
+            }
+            else
+            {
+               currentRow += (char)stream.ReadByte();
+
+               if (currentRow[^1] == 0x22)
+               {
+                  isInQuotes = !isInQuotes;
+               }
+            }
+         }
+      }
+
+      public static async Task ToStream<T>(List<T> entries, Stream outputStream)
+      {
+         await outputStream.WriteAsync(Encoding.UTF8.GetBytes(ICsvPortable.ExportDefinition<T>()));
+         foreach (var entry in entries)
+         {
+            await outputStream.WriteAsync(Encoding.UTF8.GetBytes(ICsvPortable.ExportToCsvLine(entry)));
+         }
+
+         await outputStream.FlushAsync();
       }
    }
 }

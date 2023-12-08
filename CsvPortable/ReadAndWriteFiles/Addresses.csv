@@ -1,0 +1,11 @@
+Street;City;Country;ZipCode;Created
+"Street1";"City1";"Country1";10000;"2022-01-01T00:00:00"
+"Street2";"City2";"Country2";20000;"2022-01-02T00:00:00"
+"Street3";"City3";"Country3";30000;"2022-01-03T00:00:00"
+"Street4";"City4";"Country4";40000;"2022-01-03T00:00:00"
+"Street5";"City5";"Country5";1737;"2022-01-05T00:00:00"
+"Street6";"City6";"Country6";60000;"2022-01-06T00:00:00"
+"Street7";"City7";"Country7";70000;"2022-01-07T00:00:00"
+"Street8";"City8";"Country8";136163;"2022-01-08T00:00:00"
+"Street9";"City9";"Country9";90000;"2022-01-09T00:00:00"
+"Street10";"City10";"Country10";81237;"2022-01-10T00:00:00"

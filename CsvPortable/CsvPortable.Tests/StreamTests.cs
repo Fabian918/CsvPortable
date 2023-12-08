@@ -16,11 +16,8 @@ public class StreamTests
    [Fact]
    public void TestStreamInputOutput()
    {
-      var loader = ICsvPortable.CreateStreamer(output.BuildLogger());
-
       var stream = File.OpenRead("Files/Person/Person1.csv");
-      var persons = loader.FromStream<Person>(stream);
-      
-      
+      var persons = ICsvPortable.FromStream<Person>(stream);
+      Assert.NotEmpty(persons);
    }
 }
