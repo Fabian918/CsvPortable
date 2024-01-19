@@ -5,7 +5,7 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <Authors>Fabian Hering</Authors>
-        <Version>0.2.0</Version>
+        <Version>0.3.0</Version>
         <Description>Simple, modular and powerful csv mapper.</Description>
         <Package>README.md</Package>
         <PackageProjectUrl>https://github.com/Fabian918/CsvPortable</PackageProjectUrl>
