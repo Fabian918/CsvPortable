@@ -1,6 +1,7 @@
 namespace CsvPortable.Configuration;
 
-public class PropertyMode
+public enum PropertyMode
 {
-   
+   Explicit,
+   All
 }

@@ -22,7 +22,7 @@ namespace CsvPortable.Interfaces
       {
          parameter ??= CsvParameter.Default;
          string export = "";
-         foreach (var prop in GetPropertiesToMap(t, parameter.Configuration))
+         foreach (var prop in GetPropertiesToMap(t, parameter))
          {
             TypeConverter converter = TypeDescriptor.GetConverter(prop.PropertyInfo.PropertyType);
 
@@ -53,7 +53,7 @@ namespace CsvPortable.Interfaces
          string export = "";
          parameter ??= CsvParameter.Default;
 
-         foreach (var prop in GetPropertiesToMap(valObject!.GetType(), parameter.Configuration))
+         foreach (var prop in GetPropertiesToMap(valObject!.GetType(), parameter))
          {
             var propValue = prop.PropertyInfo.GetValue(valObject);
             TypeConverter converter = TypeDescriptor.GetConverter(prop.PropertyInfo.PropertyType);
@@ -133,7 +133,7 @@ namespace CsvPortable.Interfaces
          var itemsSave = items.GetRange(0, items.Count);
          var item = Activator.CreateInstance(type);
 
-         foreach (var prop in GetPropertiesToMap(type, parameter.Configuration))
+         foreach (var prop in GetPropertiesToMap(type, parameter))
          {
             // TODO:  Enable caching here
             TypeConverter converter = TypeDescriptor.GetConverter(prop.PropertyInfo.PropertyType);
@@ -175,37 +175,67 @@ namespace CsvPortable.Interfaces
 
          return item ?? DeserializationException(type, "Could not create instance of type");
       }
-      
+
       private static CsvDeserializationException DeserializationException(Type type, string message, string? csvRow = null)
       {
          return new CsvDeserializationException($"Error while creating '{type.Name}' - '{message}'", csvRow);
       }
 
-
-      private static readonly List<(Type Type, CsvConfiguration? Configuration, List<CsvProperty> Properties)>
-         CacheReflections =
-            new List<(Type Type, CsvConfiguration? Configuration, List<CsvProperty> Properties)>();
-
-
-      internal static List<CsvProperty> GetPropertiesToMap(Type T, CsvConfiguration? configuration)
+      private record CacheReflection
       {
-         if (CacheReflections.Exists(k => k.Type == T && k.Configuration == configuration))
+         public CacheReflection(Type type, PropertyMode propertyMode, CsvConfiguration? configuration, List<CsvProperty> properties)
          {
-            return CacheReflections.First(k => k.Type == T && k.Configuration == configuration).Properties;
+            this.Type = type ?? throw new ArgumentNullException(nameof(type));
+            this.PropertyMode = propertyMode;
+            this.Configuration = configuration;
+            this.Properties = properties ?? throw new ArgumentNullException(nameof(properties));
          }
 
-         var maps = T
-            .GetProperties()
-            .ToList()
-            .Where(k =>
-               !k.GetCustomAttributes(false).Any(k => k.GetType() == typeof(CsvIgnoreAttribute)))
-            .Select(k => new CsvProperty(k)).ToList();
+         public Type Type { get; set; }
+         public PropertyMode PropertyMode { get; set; }
+         public CsvConfiguration? Configuration { get; set; }
+         public List<CsvProperty> Properties { get; set; }
+      }
+
+      private static readonly List<CacheReflection>
+         CacheReflections =
+            new List<CacheReflection>();
+
+
+      internal static List<CsvProperty> GetPropertiesToMap(Type T, CsvParameter parameter)
+      {
+         var cacheReflection = CacheReflections.FirstOrDefault(k => k.Type == T && k.PropertyMode == parameter.PropertyMode && k.Configuration == parameter.Configuration);
+         if (cacheReflection is not null)
+         {
+            return cacheReflection.Properties;
+         }
+
+         List<CsvProperty> maps;
+         if (parameter.PropertyMode == PropertyMode.Explicit)
+         {
+            maps = T
+               .GetProperties()
+               .ToList()
+               .Where(k =>
+                  k.GetCustomAttributes(false).Any(k => k.GetType() == typeof(CsvPropertyAttribute)))
+               .Select(k => new CsvProperty(k)).ToList();
+         }
+         else
+         {
+            maps = T
+               .GetProperties()
+               .ToList()
+               .Where(k =>
+                  !k.GetCustomAttributes(false).Any(k => k.GetType() == typeof(CsvIgnoreAttribute)))
+               .Select(k => new CsvProperty(k)).ToList();
+         }
+
 
          var t = T.GetProperties();
 
          maps = maps.OrderBy(k => k.Index).ToList();
 
-         CacheReflections.Add((T, configuration, maps));
+         CacheReflections.Add(new CacheReflection(T, parameter.PropertyMode, parameter.Configuration, maps));
          return maps;
       }
 
