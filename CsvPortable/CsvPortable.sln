@@ -12,6 +12,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{47
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReadAndWriteFiles", "ReadAndWriteFiles\ReadAndWriteFiles.csproj", "{A5192D06-4ECF-43FF-917E-346B167E1B51}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelloWorld", "HelloWorld\HelloWorld.csproj", "{05B9CAF6-6822-4299-A363-229BCB004F20}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -34,9 +36,14 @@ Global
 		{A5192D06-4ECF-43FF-917E-346B167E1B51}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A5192D06-4ECF-43FF-917E-346B167E1B51}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A5192D06-4ECF-43FF-917E-346B167E1B51}.Release|Any CPU.Build.0 = Release|Any CPU
+		{05B9CAF6-6822-4299-A363-229BCB004F20}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{05B9CAF6-6822-4299-A363-229BCB004F20}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{05B9CAF6-6822-4299-A363-229BCB004F20}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{05B9CAF6-6822-4299-A363-229BCB004F20}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{A5192D06-4ECF-43FF-917E-346B167E1B51} = {472365B1-BDE3-4247-A6FF-9CECC3B871B6}
 		{3C778FB2-CE4F-4FAB-B85D-459A63BE9C21} = {472365B1-BDE3-4247-A6FF-9CECC3B871B6}
+		{05B9CAF6-6822-4299-A363-229BCB004F20} = {472365B1-BDE3-4247-A6FF-9CECC3B871B6}
 	EndGlobalSection
 EndGlobal
