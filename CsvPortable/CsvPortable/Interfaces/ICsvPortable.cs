@@ -399,9 +399,13 @@ namespace CsvPortable.Interfaces
          }
       }
 
-      public static async Task ToStream<T>(List<T> entries, Stream outputStream)
+      public static async Task ToStream<T>(List<T> entries, Stream outputStream, bool skipDefinition = false)
       {
-         await outputStream.WriteAsync(Encoding.UTF8.GetBytes(ICsvPortable.ExportDefinition<T>()));
+         if (!skipDefinition)
+         {
+            await outputStream.WriteAsync(Encoding.UTF8.GetBytes(ICsvPortable.ExportDefinition<T>()));
+         }
+
          foreach (var entry in entries)
          {
             await outputStream.WriteAsync(Encoding.UTF8.GetBytes(ICsvPortable.ExportToCsvLine(entry)));
