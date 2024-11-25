@@ -5,7 +5,7 @@ namespace CsvPortable.Tests.TestDto;
 public class BasicTestDto
 {
     [CsvProperty()] public string? String { get; set; }
-    [CsvProperty()] public char? Char { get; set; }
+    [CsvProperty(customTransfomer: (a) => { return "d123";})] public char? Char { get; set; }
 
     [CsvProperty()] public bool? Bool { get; set; }
 

@@ -9,6 +9,17 @@
 
     <ItemGroup>
       <PackageReference Include="CsvPortable" Version="0.3.1" />
+      <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
+    </ItemGroup>
+
+
+    <ItemGroup>
+        <Content Include="..\CsvPortable\stylecop.json">
+            <Link>stylecop.json</Link>
+        </Content>
     </ItemGroup>
 
 </Project>

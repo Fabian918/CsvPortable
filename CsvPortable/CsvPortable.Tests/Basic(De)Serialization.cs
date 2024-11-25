@@ -4,6 +4,8 @@ using CsvPortable.Tests.TestDto;
 
 namespace CsvPortable.Tests;
 
+using Xunit;
+
 public class BasicDeSerializationTests
 {
     [Theory]

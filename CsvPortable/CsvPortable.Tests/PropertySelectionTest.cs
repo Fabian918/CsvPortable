@@ -4,6 +4,7 @@ using System.Globalization;
 using Attributes;
 using Configuration;
 using Interfaces;
+using Xunit;
 
 public class PropertySelectionTest
 {

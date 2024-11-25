@@ -3,6 +3,8 @@ using CsvPortable.Interfaces;
 
 namespace CsvPortable.Tests;
 
+using Xunit;
+
 public class CsvDelimiterTest
 {
 

@@ -6,21 +6,29 @@
 // THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
 // IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-namespace CsvPortable.Configuration;
-
-/// <summary>
-/// The property mode for the csv configuration.
-/// Specifies whether only properties with the CsvProperty attribute should be considered or all properties.
-/// </summary>
-public enum PropertyMode
+namespace CsvPortable.Attributes
 {
   /// <summary>
-  /// Only specified properties are considered.
+  /// Indicates that the property should be manipulated before deserializing it to csv.
+  /// Attribute can be inherited to create custom manipulation.
   /// </summary>
-  Explicit,
+  public abstract class CsvManipulateAttribute : Attribute
+  {
+    /// <summary>
+    /// Gets Type of manipulation.
+    /// </summary>
+    public abstract int ManipulationType { get; }
 
-  /// <summary>
-  /// All properties are considered.
-  /// </summary>
-  All,
+    /// <summary>
+    /// Gets the documentation value.
+    /// </summary>
+    public abstract string Documentation { get; }
+
+    /// <summary>
+    /// Function to manipulate the value.
+    /// </summary>
+    /// <param name="value">value.</param>
+    /// <returns>manipulated value.</returns>
+    public abstract string ManipulateValue(object? value);
+  }
 }

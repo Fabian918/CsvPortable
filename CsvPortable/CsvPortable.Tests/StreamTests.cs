@@ -2,6 +2,7 @@ namespace CsvPortable.Tests;
 
 using Deserialize;
 using Interfaces;
+using Xunit;
 using Xunit.Abstractions;
 
 public class StreamTests

@@ -4,6 +4,8 @@ using Newtonsoft.Json;
 
 namespace CsvPortable.Tests.TestDto;
 
+using Xunit;
+
 public class SplitCsvTests
 {
    const string TestDataPrefix = "./Files/SplitCsvRow";

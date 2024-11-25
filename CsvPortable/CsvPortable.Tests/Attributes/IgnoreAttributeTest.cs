@@ -3,6 +3,8 @@ using CsvPortable.Interfaces;
 
 namespace CsvPortable.Tests.TestDto.Attributes;
 
+using Xunit;
+
 public class IgnoreAttributeTest
 {
 
